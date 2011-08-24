@@ -1,0 +1,2 @@
+DESCRIPTION:
+This script reads the "My Clippings.txt" file copied from a Kindle and produces a separate text file for each title included containing all clippings associated with that title.

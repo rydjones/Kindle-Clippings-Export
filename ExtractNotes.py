@@ -20,8 +20,8 @@ def SiftClippings(lines):
 		else:
 			if flag == 0:							#Clear flag > Expect title (key) line
 				flag = 1							#Set flag for next iteration
-				key = ''.join(line.split()[0:5])	#Keep titles reasonable length, eliminate spaces
-				if not notes.has_key(line):			#Check for existence of key
+				key = ''.join(line.split()[:5])		#Keep titles reasonable length, eliminate spaces
+				if not notes.has_key(key):			#Check for existence of key
 					notes[key] = []					#Create new list as value for key
 			else:
 				if not line.find('-') == 0:			#Eliminate unnecessary data (dates, etc.)

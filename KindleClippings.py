@@ -20,7 +20,7 @@ def Sift(lines):
 		else:
 			if flag == 0:							#Clear flag > Expect title (key) line
 				flag = 1							#Set flag for next iteration
-				key = ''.join(line.split()[:5])		#Keep titles reasonable length, eliminate spaces
+				key = line
 				if not notes.has_key(key):			#Check for existence of key
 					notes[key] = []					#Create new list as value for key
 			else:
@@ -35,14 +35,23 @@ def WriteFiles(notes):
 		os.mkdir('Notes')
 		
 	for title in notes:
-		filename = 'Notes/' + title + '.txt'		#Separate directory to keep things clean
+		filename = 'Notes/' + ValidateForFilename(title) + '.txt'	#Separate directory to keep things clean
 		try:
 			f = open(filename,'w')
 			f.writelines(notes[title])				#Write all lines in list for each Title (key)
 			f.close()
 		except IOError:								#Gracefully (more or less) escape invalid filenames
 			print '\nError writing file for:\n' + title + '\n\n'
-		
+
+
+# Transform kindle titles to valid filenames
+def ValidateForFilename(title):
+	import string
+	valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+	title = ''.join(c for c in title if c in valid_chars)	#eliminate invalid characters
+	title = ''.join(title.split()[:5])			#Keep titles reasonable length, eliminate spaces
+	return title
+
 
 if __name__ == '__main__':
 	WriteFiles(Sift(Read()))

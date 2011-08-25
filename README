@@ -2,9 +2,13 @@ DESCRIPTION:
 This script reads the "My Clippings.txt" file copied from a Kindle and produces a separate text file for each title included containing all clippings associated with that title.
 
 CONTENTS:
-ExtractNotes.py is the main python script
+KindleClippings.py is the main python script
 My Clippings.txt is sample input to run the script on
 
 NOTES:
 - Currently the script must be run in the working directory containing the input file
 - A directory called "Notes" will be created containing output text files
+
+TO DO:
+- Order notes by date and time
+- Display one date followed by all clippings from that date

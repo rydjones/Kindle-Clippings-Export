@@ -1,7 +1,7 @@
 import os
 
 # Reads all lines out of 'My Clippings.txt' taken off of Kindle
-def ReadClippings():
+def Read():
 	f = open('My Clippings.txt')
 	lines = f.readlines()
 	f.close()
@@ -9,7 +9,7 @@ def ReadClippings():
 
 
 # Process lines, generate dict keys, associate lists of lines
-def SiftClippings(lines):
+def Sift(lines):
 	notes = {}			#Keys are titles, Values are lists of associated notes
 	flag = 0			#Cleared in loop, when note delimiter '=======' is reached
 	
@@ -45,4 +45,4 @@ def WriteFiles(notes):
 		
 
 if __name__ == '__main__':
-	WriteFiles(SiftClippings(ReadClippings()))
+	WriteFiles(Sift(Read()))

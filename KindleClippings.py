@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-import os
+import os, sys
+sys.path.insert(0, os.path.abspath(os.getcwd() + '/parser'))
 
 # Reads all lines out of 'My Clippings.txt' taken off of Kindle
 def ReadFile():

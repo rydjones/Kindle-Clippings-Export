@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 import os
 
 # Reads all lines out of 'My Clippings.txt' taken off of Kindle
-def Read():
+def ReadFile():
 	f = open('My Clippings.txt')
 	lines = f.readlines()
 	f.close()
@@ -9,7 +10,7 @@ def Read():
 
 
 # Process lines, generate dict keys, associate lists of lines
-def Sift(lines):
+def Parse(lines):
 	notes = {}			#Keys are titles, Values are lists of associated notes
 	flag = 0			#Cleared in loop, when note delimiter '=======' is reached
 	
@@ -53,5 +54,21 @@ def ValidateForFilename(title):
 	return title
 
 
+class KindleTitle:
+	""" Holds data for one work including list of clippings """
+	def __init__(self, title, author):
+		self.title = title
+		self.author = author
+		self.clippings = []
+	def addClipping(self, clipping):
+		self.clippings.append(clipping)
+		
+		
+class Clipping:
+	def __init__(self, title, date, text):
+		self.title = title
+		self.date = date
+		self.text = text
+
 if __name__ == '__main__':
-	WriteFiles(Sift(Read()))
+	WriteFiles(Parse(ReadFile()))

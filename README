@@ -1,6 +1,11 @@
 DESCRIPTION:
 This script reads the "My Clippings.txt" file copied from a Kindle and produces a separate text file for each title included containing all clippings associated with that title.
 
+REQUIRES:
+kindleclippingsparser.py (Licensed under GPL-3)
+File is included unmodified in this repository as part of an aggregate work per GPL-3 terms.
+Credit to author Albin Stjerna (https://github.com/albins)
+
 CONTENTS:
 KindleClippings.py is the main python script
 My Clippings.txt is sample input to run the script on

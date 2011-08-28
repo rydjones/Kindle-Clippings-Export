@@ -12,10 +12,11 @@ class Clippings():
 			self.notes = self.Parse(self.ReadFile())
 		else:
 			print "Your file could not be properly loaded.\n"
+			exit
 	
 	
 	def ReadFile(self):
-		# Reads all lines out of 'My Clippings.txt' taken off of Kindle
+		# Reads all lines out of 'My Clippings.txt'
 		# Returns list of lines read
 		# Called from __init__()
 		
@@ -77,21 +78,29 @@ def ValidateForFilename(title):
 	return title
 
 
-class KindleTitle:
+class Title:
 	""" Holds data for one work including list of clippings """
 	def __init__(self, title, author):
 		self.title = title
 		self.author = author
-		self.clippings = []
+		self.clippings = []		#List of Clipping objects
+		
+	def __str__(self):
+		return self.title + ' by ' + self.author
+		
 	def addClipping(self, clipping):
 		self.clippings.append(clipping)
-		
+	
 		
 class Clipping:
-	def __init__(self, title, date, text):
-		self.title = title
+	def __init__(self, type, location, date, text):
+		self.type = type
+		self.location = location
 		self.date = date
 		self.text = text
+		
+	def __str__():
+		return self.text
 
 if __name__ == '__main__':
 	import Tkinter, tkFileDialog

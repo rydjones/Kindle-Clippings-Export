@@ -2,12 +2,9 @@ DESCRIPTION:
 This script reads the "My Clippings.txt" file copied from a Kindle and produces a separate text file for each title included containing all clippings associated with that title. Also provides classes for dealing with data parsed from the file.
 
 REQUIRES:
-kindleclippingsparser.py (Licensed under GPL-3)
+kindleclippingsparser.py (Licensed under GNU GPL-3)
 File is included unmodified in this repository as part of an aggregate work per GPL-3 terms.
 Credit to author Albin Stjerna (https://github.com/albins)
-
-CONTENTS:
-KindleClippings.py is the main python script
 
 NOTES:
 - Output will be written to a directory called "Notes" in the same location as the input file
@@ -17,3 +14,7 @@ TO DO:
 - Display one date followed by all clippings from that date
 - Option to write notes to Evernote or text files
 - Append NEW clippings to existing file
+
+LICENSE:
+Copyright (C) 2011 Ryan Jones
+Distributed under the GNU General Public License version 3

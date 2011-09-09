@@ -1,15 +1,23 @@
 #!/usr/bin/env python
-import os, sys
+import os 
+import sys
+import string
+import codecs
 sys.path.insert(0, os.path.abspath(os.getcwd() + '/parser'))
+from kindleclippingsparser import KindleClippingsParser
 
-class Clippings():
-
+class MyClippings():
+    """ 
+    Container for all data within My Clippings.txt file
+    Attributes: filepath, directory, titles[list]
+    One-to-Many relationship with Titles class
+    """
     def __init__(self, filepath):
         self.filepath = filepath
         self.directory = os.path.split(filepath)[0]
         if os.path.split(filepath)[1] == 'My Clippings.txt':
             print 'File selected: \n' + filepath + '\n'
-            self.notes = self.Parse(self.ReadFile())
+            self.titles = self.Parse(self.ReadFile())   #Dictionary of titles (works) represents all clipping data
         else:
             print "Your file could not be properly loaded.\n"
             exit
@@ -17,37 +25,28 @@ class Clippings():
     
     def ReadFile(self):
         # Reads all lines out of 'My Clippings.txt'
-        # Returns list of lines read
+        # Returns parser object
         # Called from __init__()
         
-        f = open(self.filepath)
-        lines = f.readlines()
-        f.close()
-        return lines
+        parser = KindleClippingsParser(open(self.filepath,'r'))
+        return parser
 
     
-    def Parse(self, lines):
+    def Parse(self, parser):
         # Parses lines from ReadFile()
-        # Returns dictionary: key = title, value = list of clippings
+        # Returns dictionary (key=title, value=Title object)
         # Called from __init__()
         
-        notes = {}            #Keys are titles, Values are lists of associated notes
-        flag = 0            #Cleared in loop, when note delimiter '=======' is reached
-        
-        # Process lines from the file
-        for line in lines:
-            if line.find('===') == 0:    #Clear flag if note delimiter is detected
-                flag = 0
-            else:
-                if flag == 0:                            #Clear flag > Expect title (key) line
-                    flag = 1                            #Set flag for next iteration
-                    key = line
-                    if not notes.has_key(key):            #Check for existence of key
-                        notes[key] = []                    #Create new list as value for key
-                else:
-                    if not line.find('-') == 0:            #Eliminate unnecessary data (dates, etc.)
-                        notes[key].append(line)            #Append line to list for that title
-        return notes
+        titles = {}
+        clippings = parser.parse()
+        for clipping in clippings:
+            title = clipping['title']
+            if not title in titles:
+                titles[title] = Title(title, clipping['author']) 
+            
+            titles[title].addClipping(Clipping(clipping['type'], clipping['location'], 
+                                               clipping['date'], clipping['text']))
+        return titles
     
     
     def WriteFiles(self):
@@ -59,27 +58,43 @@ class Clippings():
         except OSError:
             pass
 
-        for title in self.notes:
-            filename = path + ValidateForFilename(title) + '.txt'    #Separate directory to keep things clean
+        for key in self.titles:
+            work = self.titles[key]
+            title = work.title
+            filename = path + ValidateForFilename(title) + '.txt'  #Separate directory to keep things clean
             try:
                 f = open(filename,'w')
-                f.writelines(self.notes[title])                #Write all lines in list for each Title (key)
+                titleline = u'Title: ' + work.title + u'\n'
+                authorline = u'Author/Source: ' + work.author + u'\n\n'
+                f.write(titleline.encode('utf-8'))
+                f.write(authorline.encode('utf-8'))
+                for clipping in work.clippings:
+                    try:
+                        clippingtext = clipping.text + u'\n\n'
+                        f.write(clippingtext.encode('utf8'))
+                    except UnicodeEncodeError:
+                        pass
                 f.close()
-            except IOError:                                    #Gracefully (more or less) escape invalid filenames, note errors for adjusting ValidateForFilename()
+            except IOError:                                     #Gracefully (more or less) escape invalid filenames, note errors for adjusting ValidateForFilename()
                 print '\nError writing file for:\n' + title + '\n\n'
 
 
-# Transform kindle titles to valid filenames
 def ValidateForFilename(title):
-    import string
+    # Transform kindle titles to valid filenames
+
     valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-    title = ''.join(c for c in title if c in valid_chars)    #eliminate invalid characters
-    title = ''.join(title.split()[:5])                        #Keep titles reasonable length, eliminate spaces
+    title = ''.join(c for c in title if c in valid_chars)       #eliminate invalid characters
+    title = ''.join(title.split()[:5])                          #Keep titles reasonable length, eliminate spaces
     return title
 
 
 class Title:
-    """ Holds data for one work including list of clippings """
+    """ 
+    Container for one work including list of clippings
+    Attributes: title, author, clippings[list]
+    One-to-Many relationship with Clipping class
+    Many-to-One relationship with Clippings class
+    """
     def __init__(self, title, author):
         self.title = title
         self.author = author
@@ -93,19 +108,25 @@ class Title:
     
         
 class Clipping:
+    """ 
+    Container for one clipping
+    Attributes: type, location, date, text
+    Many-to-One relationship with Title class 
+    """
     def __init__(self, type, location, date, text):
         self.type = type
         self.location = location
         self.date = date
         self.text = text
         
-    def __str__():
+    def __str__(self):
         return self.text
+
 
 if __name__ == '__main__':
     import Tkinter, tkFileDialog
     root = Tkinter.Tk()
     root.withdraw()
     file = tkFileDialog.askopenfilename(parent=root,title='Select your My Clippings.txt file')
-    MyClippings = Clippings(file)
-    MyClippings.WriteFiles()
+    myclippings = MyClippings(file)
+    myclippings.WriteFiles()

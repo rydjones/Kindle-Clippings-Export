@@ -2,7 +2,6 @@
 import os 
 import sys
 import string
-import codecs
 sys.path.insert(0, os.path.abspath(os.getcwd() + '/parser'))
 from kindleclippingsparser import KindleClippingsParser
 

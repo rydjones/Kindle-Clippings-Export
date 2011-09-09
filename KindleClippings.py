@@ -9,7 +9,7 @@ from kindleclippingsparser import KindleClippingsParser
 class MyClippings():
     """ 
     Container for all data within My Clippings.txt file
-    Attributes: filepath, directory, titles[list]
+    Attributes: filepath, directory, titles(dictionary)
     One-to-Many relationship with Titles class
     """
     def __init__(self, filepath):
@@ -17,7 +17,7 @@ class MyClippings():
         self.directory = os.path.split(filepath)[0]
         if os.path.split(filepath)[1] == 'My Clippings.txt':
             print 'File selected: \n' + filepath + '\n'
-            self.titles = self.Parse(self.ReadFile())   #Dictionary of titles (works) represents all clipping data
+            self.titles = self.Parse(self.ReadFile())
         else:
             print "Your file could not be properly loaded.\n"
             exit
@@ -70,12 +70,12 @@ class MyClippings():
                 f.write(authorline.encode('utf-8'))
                 for clipping in work.clippings:
                     try:
-                        clippingtext = clipping.text + u'\n\n'
+                        clippingtext = clipping.type + ' from ' + str(clipping.date) + '\n' + clipping.text + u'\n\n'
                         f.write(clippingtext.encode('utf8'))
                     except UnicodeEncodeError:
                         pass
                 f.close()
-            except IOError:                                     #Gracefully (more or less) escape invalid filenames, note errors for adjusting ValidateForFilename()
+            except IOError:
                 print '\nError writing file for:\n' + title + '\n\n'
 
 
@@ -84,7 +84,7 @@ def ValidateForFilename(title):
 
     valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
     title = ''.join(c for c in title if c in valid_chars)       #eliminate invalid characters
-    title = ''.join(title.split()[:5])                          #Keep titles reasonable length, eliminate spaces
+    title = ''.join(title.split()[:5])                          #Keep titles reasonable length
     return title
 
 

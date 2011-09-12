@@ -72,6 +72,7 @@ class KindleClippingsParser():
                         elif n[i:][:8] == 'Bookmark':
                             return ("Bookmark", index + 8 + i)
                         else:
+                            #print title + '\n' + author + '\n'
                             raise self.ParseError("parse error: expected Note, Highlight or Bookmark at %d" % i)
 
             else:

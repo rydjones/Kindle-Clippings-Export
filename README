@@ -13,7 +13,7 @@ Credit to author Albin Stjerna (https://github.com/albins)
 
 
 USAGE:
-$ python KindleClippings.py -i "~/Documents/" -v
+$ python KindleClippings.py -i "~/Documents/My Clippings.txt" -v
 
 
 OPTIONS:
